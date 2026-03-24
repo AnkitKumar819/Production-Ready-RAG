@@ -5,4 +5,4 @@ class Question(BaseModel):
 
 class ChatResponse(BaseModel):
     answer: str
-    sources: list[str]
+    sources: list = []

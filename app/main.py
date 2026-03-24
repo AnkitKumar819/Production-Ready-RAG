@@ -2,8 +2,8 @@ from fastapi import FastAPI, UploadFile, File
 from dotenv import load_dotenv
 import os
 
-from .rag_pipeline import RAGPipeline
-from .schemas import QuestionRequest, AnswerResponse
+from .rag import RAGPipeline
+from .schemas import Question, ChatResponse
 
 load_dotenv()
 
@@ -24,7 +24,7 @@ async def upload_file(file: UploadFile = File(...)):
 
     return {"message": "File processed successfully"}
 
-@app.post("/ask", response_model=AnswerResponse)
-def ask_question(request: QuestionRequest):
+@app.post("/ask", response_model=ChatResponse)
+def ask_question(request: Question):
     answer = rag.ask(request.question)
-    return AnswerResponse(answer=answer)
+    return ChatResponse(answer=answer, sources=[])

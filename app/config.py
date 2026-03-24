@@ -9,3 +9,4 @@ UPLOAD_DIR = "uploads"
 VECTOR_DIR = "vectorstore"
 
 os.makedirs(UPLOAD_DIR, exist_ok=True)
+os.makedirs(VECTOR_DIR, exist_ok=True)
