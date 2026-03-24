@@ -10,3 +10,5 @@ python-dotenv
 tiktoken
 pypdf
 dotenv
+streamlit
+requests
