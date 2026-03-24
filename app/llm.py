@@ -6,6 +6,6 @@ def get_llm():
     """Initialize and return OpenAI LLM."""
     return ChatOpenAI(
         api_key=OPENAI_API_KEY,
-        model="gpt-3.5-turbo",
+        model="gpt-4",
         temperature=0.7
     )

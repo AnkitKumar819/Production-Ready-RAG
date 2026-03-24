@@ -59,7 +59,7 @@ async def upload_file(file: UploadFile = File(...)):
 def ask_question(request: Question):
     try:
         rag = get_rag()
-        answer = rag.ask(request.question)
-        return ChatResponse(answer=answer, sources=[])
+        result = rag.ask(request.question)
+        return ChatResponse(answer=result["answer"], sources=result["sources"])
     except Exception as e:
         return ChatResponse(answer=f"Error: {str(e)}", sources=[])

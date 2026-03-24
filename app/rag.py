@@ -25,7 +25,7 @@ class RAGPipeline:
         chunks = self.text_splitter.split_documents(documents)
         self.vector_store.add_documents(chunks)
 
-    def ask(self, question: str) -> str:
+    def ask(self, question: str) -> dict:
         docs = self.vector_store.similarity_search(question)
         context = "\n".join([doc.page_content for doc in docs])
 
@@ -40,4 +40,16 @@ class RAGPipeline:
         """
 
         response = self.llm.invoke(prompt)
-        return response.content
+        
+        # Extract sources from documents
+        sources = []
+        for doc in docs:
+            if hasattr(doc, 'metadata') and 'source' in doc.metadata:
+                sources.append(doc.metadata['source'])
+            else:
+                sources.append("Unknown source")
+        
+        return {
+            "answer": response.content,
+            "sources": sources
+        }
