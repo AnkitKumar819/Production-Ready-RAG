@@ -27,8 +27,20 @@ class VectorStoreManager:
         # Save the updated store
         self.store.save_local(self.vector_dir)
 
-    def similarity_search(self, query: str, k: int = 4) -> list:
+    def similarity_search(self, query: str, k: int = 4, filter_args: dict = None) -> list:
         """Search for similar documents."""
         if self.store is None:
             return []
-        return self.store.similarity_search(query, k=k)
+        return self.store.similarity_search(query, k=k, filter=filter_args)
+
+    def clear(self):
+        """Clear the knowledge base gracefully without triggering WinError 32."""
+        self.store = None
+        import gc
+        gc.collect()
+        if os.path.exists(self.vector_dir):
+            import shutil
+            try:
+                shutil.rmtree(self.vector_dir)
+            except Exception:
+                pass # Files locked; self.store = None will regenerate anyway data on next ingest

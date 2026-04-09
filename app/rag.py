@@ -25,8 +25,13 @@ class RAGPipeline:
         chunks = self.text_splitter.split_documents(documents)
         self.vector_store.add_documents(chunks)
 
-    def ask(self, question: str) -> dict:
-        docs = self.vector_store.similarity_search(question)
+    def ask(self, question: str, source_doc: str = None) -> dict:
+        filter_args = None
+        if source_doc:
+            # Reconstruct the exact temp filename that was logged in metadata during ingestion
+            filter_args = {"source": f"temp_{source_doc}"}
+            
+        docs = self.vector_store.similarity_search(question, filter_args=filter_args)
         context = "\n".join([doc.page_content for doc in docs])
 
         prompt = f"""
@@ -53,3 +58,6 @@ class RAGPipeline:
             "answer": response.content,
             "sources": sources
         }
+
+    def clear(self):
+        self.vector_store.clear()
